@@ -35,3 +35,7 @@ Local demo: `yarn dev` (if you run into `Error: Expected content key ### to exis
 
 - https://github.com/axa-group/nlp.js/blob/master/docs/v3/sentiment-analysis.md
 - https://naturalnode.github.io/natural/sentiment_analysis.html
+
+## knn under chart
+
+- KNN for automatic grouping, maybe with tweakable k input box: https://github.com/tensorflow/tfjs-models/blob/master/knn-classifier/README.md
