@@ -2,20 +2,32 @@
   "name": "tensorflow-tfjs-umap",
   "scripts": {
     "start": "npm run dev",
-    "dev": "parcel index.html --open",
-    "deploy": "surge dist https://tfjs-umap-demo.surge.sh; open https://tfjs-umap-demo.surge.sh"
+    "dev": "mkdir dist; cp index.aff dist; cp index.dic dist; parcel index.html --open",
+    "deploy": "surge dist https://comment-analysis.surge.sh; open https://comment-analysis.surge.sh"
   },
   "dependencies": {
     "@tensorflow-models/universal-sentence-encoder": "1.3.3",
     "@tensorflow/tfjs": "4.2.0",
     "chart.js": "4.2.0",
+    "dictionary-en-ca": "2.4.0",
     "jquery": "3.6.3",
+    "natural": "6.5.0",
+    "node-nlp": "4.27.0",
+    "nspell": "2.1.5",
     "umap-js": "1.3.3"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "^2.9.3",
+    "assert": "^2.0.0",
     "buffer": "^5.7.1",
+    "events": "^3.1.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
     "parcel": "^2.9.3",
-    "process": "^0.11.10"
+    "path-browserify": "^1.0.0",
+    "process": "^0.11.10",
+    "querystring-es3": "^0.2.1",
+    "stream-http": "^3.1.0",
+    "url": "^0.11.0"
   }
 }

@@ -1,39 +1,37 @@
-# Learning tfjs + [umap-js](https://github.com/PAIR-code/umap-js#umap-js)
+# comment analysis experiment
 
-Just one of the things I'm learning. https://github.com/hchiam/learning
+Live demo: https://comment-analysis.surge.sh (`yarn deploy` after running `yarn dev`)
 
-Using Universal-Sentence-Encoder (USE) and UMAP to _attempt_ to graph sentences with semantically-similar meanings close together. UMAP is conceptually similar to PCA in that it also reduces dimensions, but UMAP is stochastic to help with speed of calculation for ML purposes, so the output of UMAP isn't always the same.
+Local demo: `yarn dev` (if you run into `Error: Expected content key ### to exist`, try running `rm -rf .parcel-cache` first)
 
-Get **UMAP** output coordinates with [umap-js](https://github.com/PAIR-code/umap-js#umap-js) and visualization powered by [chart.js](https://github.com/chartjs/Chart.js).
+[learning-tfjs-umap](https://github.com/hchiam/learning-tfjs-umap)
 
-Great explanation of SNE vs t-SNE (vs UMAP - which sounds better than t-SNE): https://towardsdatascience.com/visualizing-your-embeddings-4c79332581a9 - basically UMAP is better than t-SNE is better than SNE (which is related to the order they were invented). My other repo that uses [tfjs-tsne](https://github.com/tensorflow/tfjs-tsne) can be found here: https://github.com/hchiam/learning-tfjs-tsne
+[tfjs](https://github.com/tensorflow/tfjs)
 
-Learn more about TensorFlow at https://github.com/hchiam/learning-tensorflow
+[USE (Universal Sentence Encoder)](https://github.com/tensorflow/tfjs-models/blob/master/universal-sentence-encoder/README.md)
 
-## Starting by testing out this repo
+[umap-js](https://github.com/PAIR-code/umap-js#umap-js) ([UMAP vs t-SNE vs SNE](https://towardsdatascience.com/visualizing-your-embeddings-4c79332581a9))
 
-Run `yarn global add parcel` or `npm install -g parcel`, and then:
+[nlp.js](https://github.com/axa-group/nlp.js) (note: `SpellCheck` currently seems incompatible with one of [parcel](https://github.com/hchiam/learning-parcel#learning-parceljs)'s transformers)
 
-Using [`yarn`](https://github.com/hchiam/learning-yarn):
+[natural](https://github.com/NaturalNode/natural)
 
-```bash
-git clone https://github.com/hchiam/learning-tfjs-umap.git && cd learning-tfjs-umap && yarn;
-yarn dev;
-```
+[dictionaries](https://github.com/wooorm/dictionaries#example-use-with-nspell)
 
-Or with `npm`:
+[nspell](https://github.com/wooorm/nspell)
 
-```bash
-git clone https://github.com/hchiam/learning-tfjs-umap.git && cd learning-tfjs-umap && npm install;
-npm run dev;
-```
+[jQuery](https://github.com/hchiam/learning-jquery#learning-jquery)
 
-## notes to self
+[chart.js](https://github.com/chartjs/Chart.js)
 
-First run `yarn dev` to create the /dist folder, and then run this:
+## typo fix suggestions under input box to fix input box
 
-```sh
-yarn deploy
-```
+- https://github.com/axa-group/nlp.js/blob/master/docs/v4/similarity.md#spellcheck (seems to have compatibility issue with parcel)
+- https://github.com/axa-group/nlp.js/blob/master/docs/v4/similarity.md#spellcheck-trained-with-words-trained-from-a-text
+- https://naturalnode.github.io/natural/spellcheck.html (doesn't come with a dictionary)
+- https://github.com/wooorm/dictionaries#example-use-with-nspell (provides a dictionary like `dictionary-en` or `dictionary-en-ca` or [more languages](https://github.com/wooorm/dictionaries/tree/main/dictionaries), but you'll likely have to [manually copy and include some specific code](https://github.com/wooorm/dictionaries/issues/51#issuecomment-1627801903))
 
-https://tfjs-umap-demo.surge.sh
+## sentiments under chart
+
+- https://github.com/axa-group/nlp.js/blob/master/docs/v3/sentiment-analysis.md
+- https://naturalnode.github.io/natural/sentiment_analysis.html

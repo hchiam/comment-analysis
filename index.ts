@@ -2,8 +2,33 @@ const tf = require("@tensorflow/tfjs");
 require("@tensorflow/tfjs");
 const use = require("@tensorflow-models/universal-sentence-encoder");
 import { UMAP } from "umap-js";
+// import {
+//   SpellCheck as nlpSpellCheck,
+//   NGrams,
+//   SentimentAnalyzer as nlpSentimentAnalyzer,
+//   SentimentManager, // to handle multiple languages at the same time
+// } from "node-nlp";
+import {
+  // Spellcheck as naturalSpellCheck,
+  SentimentAnalyzer as naturalSentimentAnalyzer,
+  PorterStemmer, // use AFINN lexicon for sentiment analysis
+} from "natural";
+// import dictionaryEnCa from "dictionary-en-ca";
+import nspell from "nspell";
 import * as $ from "jquery";
 import Chart from "chart.js/auto"; // https://stackoverflow.com/a/67143648
+
+load();
+async function load() {
+  const aff = await fetch("./index.aff").then((response) => {
+    return response.text();
+  });
+  const dic = await fetch("./index.dic").then((response) => {
+    return response.text();
+  });
+  const spell = nspell(aff, dic);
+  console.log(spell.suggest("teh"));
+}
 
 let chart;
 
