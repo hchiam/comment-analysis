@@ -45,7 +45,7 @@ $("body").on("click", ".replace-typo", (event) => {
   const word = button.data("word");
   const suggestion = button.text();
   const yes = confirm(
-    `Replace all instances of "${word}" with "${suggestion}"?`
+    `Do you want to replace *ALL* instances of "${word}" with "${suggestion}"? Otherwise consider manually replacing individual cases.`
   );
   if (yes) {
     $("#inputs").val($("#inputs").val().replaceAll(word, suggestion));
