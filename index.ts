@@ -18,25 +18,80 @@ import nspell from "nspell";
 import * as $ from "jquery";
 import Chart from "chart.js/auto"; // https://stackoverflow.com/a/67143648
 
-load();
-async function load() {
-  const aff = await fetch("./index.aff").then((response) => {
+let aff;
+let dic;
+let spell;
+loadDictionary();
+async function loadDictionary() {
+  aff = await fetch("./index.aff").then((response) => {
     return response.text();
   });
-  const dic = await fetch("./index.dic").then((response) => {
+  dic = await fetch("./index.dic").then((response) => {
     return response.text();
   });
-  const spell = nspell(aff, dic);
-  console.log(spell.suggest("teh"));
+  spell = nspell(aff, dic);
+  console.log("loaded dictionary");
+  checkTypos();
+}
+
+let inputsPrev = $("#inputs").val();
+$("#inputs").on("keyup", (event) => {
+  if (inputsPrev === $("#inputs").val()) return;
+  checkTypos();
+  inputsPrev = $("#inputs").val();
+});
+$("body").on("click", ".replace-typo", (event) => {
+  const button = $(event.target);
+  const word = button.data("word");
+  const suggestion = button.text();
+  const yes = confirm(
+    `Replace all instances of "${word}" with "${suggestion}"?`
+  );
+  if (yes) {
+    $("#inputs").val($("#inputs").val().replaceAll(word, suggestion));
+    checkTypos();
+  }
+});
+function checkTypos() {
+  if (!spell) return;
+  const words = Array.from(
+    new Set(
+      $("#inputs")
+        .val()
+        .replace(/[.,\/#!$%\^&\*;:{}=\_`~()!?]/g, "") // allow ' and - in words
+        .split(/\s/)
+        .filter(Boolean)
+    )
+  );
+  const suggestions = words
+    .map((w) => {
+      return {
+        word: w,
+        suggestions: spell.suggest(w),
+      };
+    })
+    .filter((w) => w.suggestions.length);
+  const html = suggestions.map(
+    (w) =>
+      `<p class="typo-row"><span class="red">${
+        w.word
+      }</span> <span>&rarr;</span>
+        ${w.suggestions
+          .map(
+            (suggestion) =>
+              `<button class="replace-typo" data-word="${w.word}">${suggestion}</button>`
+          )
+          .join("")}
+      </p>`
+  );
+  $("#typo_fix_suggestions").html(html);
+  $("#suggestions").toggleClass("d-none", !suggestions.length);
 }
 
 let chart;
 
 $("#start").on("click", () => {
-  const sentences = $("#inputs")
-    .val()
-    .split("\n")
-    .filter((x) => x);
+  const sentences = $("#inputs").val().split("\n").filter(Boolean);
   if (sentences?.length) {
     $("#start").prop("disabled", true);
     $(".chartjs-tooltip").remove();

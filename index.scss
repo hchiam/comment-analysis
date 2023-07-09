@@ -7,8 +7,12 @@ body {
 body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  // justify-content: center;
   align-items: center;
+  padding: 1rem 1rem 2rem;
+  margin: 0;
+  border-bottom: 2rem solid black;
+  height: auto;
 }
 
 #inputs {
@@ -37,4 +41,34 @@ body {
   &:disabled {
     opacity: 0;
   }
+}
+
+.typo-row {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  > * {
+    display: flex;
+    align-items: center;
+  }
+  .red {
+    padding: 0.25rem;
+  }
+  &:hover .red {
+    background: red;
+    color: white;
+    border-radius: 0.25rem;
+  }
+}
+
+.center {
+  text-align: center;
+}
+
+.d-none {
+  display: none;
+}
+
+.red {
+  color: red;
 }

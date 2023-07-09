@@ -3,12 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TensorFlow.js Text Similarity Example</title>
+    <title>Comment Analysis Experiment</title>
     <link href="index.scss" rel="stylesheet" />
     <script src="index.ts" type="module"></script>
   </head>
   <body>
-    <textarea id="inputs">
+    <h1>Comment Analysis Experiment</h1>
+    <textarea id="inputs" placeholder="(comments on separate lines)">
 I like my phone.
 Your cellphone looks great.
 How old are you?
@@ -31,9 +32,18 @@ I had a very sour taste on my tongue.
 I tasted a sour aftertaste. I did not like it.
 </textarea
     >
+    <div id="suggestions" class="d-none">
+      <h2 class="center">Suggestions:</h2>
+      <div id="typo_fix_suggestions"></div>
+    </div>
+    <h2 class="center">Similarities:</h2>
     <button id="start">Start</button>
     <p id="status">Not started yet...</p>
     <canvas id="chart" class="in-progress"></canvas>
     <button id="hide_tooltips" disabled>Hide tooltips</button>
+    <div id="sentiments" class="d-none">
+      <h2 class="center">Sentiments:</h2>
+      <textarea readonly></textarea>
+    </div>
   </body>
 </html>
