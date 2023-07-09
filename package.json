@@ -1,0 +1,21 @@
+{
+  "name": "tensorflow-tfjs-umap",
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "parcel index.html --open",
+    "deploy": "surge dist https://tfjs-umap-demo.surge.sh; open https://tfjs-umap-demo.surge.sh"
+  },
+  "dependencies": {
+    "@tensorflow-models/universal-sentence-encoder": "1.3.3",
+    "@tensorflow/tfjs": "4.2.0",
+    "chart.js": "4.2.0",
+    "jquery": "3.6.3",
+    "umap-js": "1.3.3"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.8.3",
+    "buffer": "^5.7.1",
+    "parcel": "2.8.3",
+    "process": "^0.11.10"
+  }
+}

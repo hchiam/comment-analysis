@@ -1,0 +1,5 @@
+{
+  "moduleResolution": "node",
+  "target": "es5",
+  "exclude": ["node_modules", "wwwroot"]
+}
