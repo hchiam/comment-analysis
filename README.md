@@ -31,7 +31,7 @@ Local demo: `yarn dev` (if you run into `Error: Expected content key ### to exis
 - https://naturalnode.github.io/natural/spellcheck.html (doesn't come with a dictionary)
 - https://github.com/wooorm/dictionaries#example-use-with-nspell (provides a dictionary like `dictionary-en` or `dictionary-en-ca` or [more languages](https://github.com/wooorm/dictionaries/tree/main/dictionaries), but you'll likely have to [manually copy and include some specific code](https://github.com/wooorm/dictionaries/issues/51#issuecomment-1627801903))
 
-## sentiments under chart
+## sentiments above chart
 
 - https://github.com/axa-group/nlp.js/blob/master/docs/v3/sentiment-analysis.md
 - https://naturalnode.github.io/natural/sentiment_analysis.html
