@@ -123,12 +123,16 @@ function showSentiments() {
     })
     .map((s) => {
       const score = s.score;
+      let labelSymbol = "😐";
       let label = "neutral";
-      if (score > 0) label = "positive";
-      if (score < 0) label = "negative";
-      return `likely ${label}: ${score > 0 ? "+" : ""}${score} : "${
-        s.sentence
-      }"`;
+      if (score > 0) {
+        labelSymbol = "✅";
+        label = "positive";
+      } else if (score < 0) {
+        labelSymbol = "❌";
+        label = "negative";
+      }
+      return `${labelSymbol} likely ${label}: ${score} : "${s.sentence}"`;
     });
   $("#sentiments").find("textarea").val(sentiments.join("\n"));
   $("#sentiments").toggleClass("d-none", !sentiments.length);
