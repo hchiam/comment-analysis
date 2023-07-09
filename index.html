@@ -9,7 +9,7 @@
   </head>
   <body>
     <h1>Comment Analysis Experiment</h1>
-    <textarea id="inputs" placeholder="(comments on separate lines)">
+    <textarea id="inputs" wrap="off" placeholder="(comments on separate lines)">
 Try inlcuding comments with typos in teh text.
 Words in teh second comment have teh same typo.
 I like my phone.
@@ -38,14 +38,15 @@ I tasted a sour aftertaste. I did not like it.
       <h2 class="center">Suggestions:</h2>
       <div id="typo_fix_suggestions"></div>
     </div>
+    <div id="sentiments" class="d-none">
+      <h2 class="center">Sentiments:</h2>
+      <p class="center">(Scale is from -5 to +5.)</p>
+      <textarea wrap="off" readonly></textarea>
+    </div>
     <h2 class="center">Similarities:</h2>
     <button id="start">Start</button>
     <p id="status">Not started yet...</p>
     <canvas id="chart" class="in-progress"></canvas>
     <button id="hide_tooltips" disabled>Hide tooltips</button>
-    <div id="sentiments" class="d-none">
-      <h2 class="center">Sentiments:</h2>
-      <textarea readonly></textarea>
-    </div>
   </body>
 </html>

@@ -18,6 +18,9 @@ import nspell from "nspell";
 import * as $ from "jquery";
 import Chart from "chart.js/auto"; // https://stackoverflow.com/a/67143648
 
+const stemmer = PorterStemmer;
+const analyzer = new naturalSentimentAnalyzer("English", stemmer, "afinn");
+
 let aff;
 let dic;
 let spell;
@@ -40,30 +43,23 @@ $("#inputs").on("keyup", (event) => {
   checkTypos();
   inputsPrev = $("#inputs").val();
 });
-$("body").on("click", ".replace-typo", (event) => {
-  const button = $(event.target);
+$("body").on("click", ".replace-typo, .replace-typo-other", function (event) {
+  const button = $(this);
+  const isOther = button.hasClass("replace-typo-other");
   const word = button.data("word");
-  const suggestion = button.text();
+  const suggestion = isOther ? button.next("input").val() : button.text();
   const yes = confirm(
     `Do you want to replace *ALL* instances of "${word}" with "${suggestion}"? Otherwise consider manually replacing individual cases.`
   );
   if (yes) {
-    $("#inputs").val($("#inputs").val().replaceAll(word, suggestion));
+    const wholeWords = new RegExp("\\b" + word + "\\b", "g");
+    $("#inputs").val($("#inputs").val().replace(wholeWords, suggestion));
     checkTypos();
   }
 });
 function checkTypos() {
   if (!spell) return;
-  const words = Array.from(
-    new Set(
-      $("#inputs")
-        .val()
-        // .replace(/[.,\/#!$%\^&\*;:{}=\_`~()!?]/g, "") // allow ' and - in words
-        // .split(/\s/)
-        .split(/[\s.,\/#!$%\^&\*;:{}=\_`~()!?]/) // allow ' and - in words
-        .filter(Boolean)
-    )
-  );
+  const words = Array.from(new Set(getWordsFromInputs()));
   const suggestions = words
     .map((w) => {
       return {
@@ -83,16 +79,65 @@ function checkTypos() {
               `<button class="replace-typo" data-word="${w.word}">${suggestion}</button>`
           )
           .join("")}
+          <button class="replace-typo-other" data-word="${
+            w.word
+          }">other:</button>
+          <input "replace-typo-other" placeholder="${w.word}">
       </p>`
   );
   $("#typo_fix_suggestions").html(html);
   $("#suggestions").toggleClass("d-none", !suggestions.length);
+  showSentiments();
+}
+
+function getSentencesFromInputs() {
+  return $("#inputs").val().split("\n").filter(Boolean);
+}
+
+function getWordsFromInputs() {
+  return getWordsFromSentence($("#inputs").val());
+}
+
+function getWordsFromSentence(sentence) {
+  // allow ' and - in words
+  // split on punctuation, including "
+  return (
+    sentence // .replace(/[.,\/#!$%\^&\*;:{}=\_`~()!?"]/g, "")
+      // .split(/\s/)
+      .split(/[\s.,\/#!$%\^&\*;:{}=\_`~()!?"]/)
+      .filter(Boolean)
+  );
+}
+
+showSentiments();
+function showSentiments() {
+  const sentences = getSentencesFromInputs();
+  console.log(sentences);
+  const sentiments = sentences
+    .map((sentence) => {
+      const score = analyzer.getSentiment(getWordsFromSentence(sentence));
+      return {
+        sentence: sentence,
+        score: Math.round(score * 10) / 10,
+      };
+    })
+    .map((s) => {
+      const score = s.score;
+      let label = "neutral";
+      if (score > 0) label = "positive";
+      if (score < 0) label = "negative";
+      return `likely ${label}: ${score > 0 ? "+" : ""}${score} : "${
+        s.sentence
+      }"`;
+    });
+  $("#sentiments").find("textarea").val(sentiments.join("\n"));
+  $("#sentiments").toggleClass("d-none", !sentiments.length);
 }
 
 let chart;
 
 $("#start").on("click", () => {
-  const sentences = $("#inputs").val().split("\n").filter(Boolean);
+  const sentences = getSentencesFromInputs();
   if (sentences?.length) {
     $("#start").prop("disabled", true);
     $(".chartjs-tooltip").remove();
