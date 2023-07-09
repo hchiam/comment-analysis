@@ -48,6 +48,10 @@ $("body").on("click", ".replace-typo, .replace-typo-other", function (event) {
   const isOther = button.hasClass("replace-typo-other");
   const word = button.data("word");
   const suggestion = isOther ? button.next("input").val() : button.text();
+  if (!suggestion) {
+    button.next("input").focus();
+    return;
+  }
   const yes = confirm(
     `Do you want to replace *ALL* instances of "${word}" with "${suggestion}"? Otherwise consider manually replacing individual cases.`
   );
