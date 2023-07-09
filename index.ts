@@ -58,8 +58,9 @@ function checkTypos() {
     new Set(
       $("#inputs")
         .val()
-        .replace(/[.,\/#!$%\^&\*;:{}=\_`~()!?]/g, "") // allow ' and - in words
-        .split(/\s/)
+        // .replace(/[.,\/#!$%\^&\*;:{}=\_`~()!?]/g, "") // allow ' and - in words
+        // .split(/\s/)
+        .split(/[\s.,\/#!$%\^&\*;:{}=\_`~()!?]/) // allow ' and - in words
         .filter(Boolean)
     )
   );
