@@ -307,3 +307,9 @@ function plot(coordinatesArray, labels, callback) {
 
   return chart;
 }
+
+setTimeout(() => {
+  $(".progressive-disclosure-container").one("mousemove", function () {
+    $(this).find(".progressive-disclosure").removeClass("d-none");
+  });
+}, 2000);

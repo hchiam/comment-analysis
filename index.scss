@@ -24,6 +24,13 @@ body {
   border: solid;
 }
 
+#similarities {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 #start {
   padding: 1rem;
 }
@@ -64,6 +71,10 @@ body {
     font-style: italic;
     font-weight: bold;
   }
+}
+
+.progressive-disclosure {
+  color: gray;
 }
 
 .center {
