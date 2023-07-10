@@ -152,10 +152,10 @@ let chart;
 $("#start").on("click", () => {
   const sentences = getSentencesFromInputs();
   if (sentences?.length) {
-    $("#similarities button, #similarities input").prop("disabled", true);
+    $("#similarities").find("button, input").prop("disabled", true);
     $(".chartjs-tooltip").remove();
     runAnalysis(sentences, () => {
-      $("#similarities button, #similarities input").prop("disabled", false);
+      $("#similarities").find("button, input").prop("disabled", false);
       $("#start").text("Re-run");
     });
   }
