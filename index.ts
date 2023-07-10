@@ -27,6 +27,18 @@ let dic;
 let spell;
 loadDictionary();
 
+let classColourIndex = 0;
+const classColourChoices = [
+  "brown",
+  "red",
+  "orange",
+  "yellow",
+  "green",
+  "blue",
+  "purple",
+  "grey",
+  "white",
+];
 const knn = knnClassifier.create();
 
 showSentiments();
@@ -214,6 +226,8 @@ function showStatus(message) {
 }
 
 function plot(coordinatesArray, labels, callback) {
+  classColourIndex = 0;
+
   const data = coordinatesArray.map((x) => {
     return { x: x[0], y: x[1] };
   });
@@ -296,6 +310,27 @@ function plot(coordinatesArray, labels, callback) {
           },
         },
       },
+      onClick: (event, elements, chart) => {
+        const dataset = chart.data.datasets[0];
+
+        let colour = classColourChoices[classColourIndex];
+        if (classColourIndex < classColourChoices.length) {
+          classColourIndex++;
+        } else {
+          colour = randomColour();
+        }
+
+        const notClickedYet = !Array.isArray(dataset["pointBackgroundColor"]);
+        if (notClickedYet) {
+          dataset["pointBackgroundColor"] = dataset.data.map((v, i) =>
+            i == elements[0]?.index ? colour : "black"
+          );
+        } else if (elements[0]?.index) {
+          dataset["pointBackgroundColor"][elements[0].index] = colour;
+        }
+
+        chart.update();
+      },
     },
   });
 
@@ -312,8 +347,20 @@ function plot(coordinatesArray, labels, callback) {
   return chart;
 }
 
+function randomColour() {
+  const result = [];
+  const allowedCharacters = "0123456789abcdef";
+  const numberOfOptions = allowedCharacters.length;
+  for (let i = 0; i < 6; i++) {
+    result.push(
+      allowedCharacters.charAt(Math.floor(Math.random() * numberOfOptions))
+    );
+  }
+  return "#" + result.join("");
+}
+
 async function processKnn(sentences, plottableData) {
-  $("#similarities textarea").val("");
+  $("#groups").find("textarea").val("");
   knn.clearAllClasses();
   const numberOfClasses = $("#numberOfClasses").val() || 3;
   const kNearestNeighbours = $("#kNearestNeighbours").val() || 1; // Math.floor(Math.sqrt(plottableData.length)) || 1;
@@ -352,7 +399,7 @@ async function processKnn(sentences, plottableData) {
     })
     .join("\n");
 
-  $("#similarities textarea").val(val);
+  $("#groups").find("textarea").val(val);
 }
 
 setTimeout(() => {
