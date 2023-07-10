@@ -27,9 +27,23 @@ let dic;
 let spell;
 loadDictionary();
 
-const knn = knnClassifier.create();
+let plottableData;
 
-showSentiments();
+let classColourIndex = 0;
+const classColourChoices = [
+  "black",
+  "brown",
+  "red",
+  "orange",
+  "yellow",
+  "green",
+  "blue",
+  "purple",
+  "grey",
+  "white",
+];
+let exampleSentenceIndices = [];
+const knn = knnClassifier.create();
 
 async function loadDictionary() {
   aff = await fetch("./index.aff").then((response) => {
@@ -145,6 +159,7 @@ function showSentiments() {
     });
   $("#sentiments").find("textarea").val(sentiments.join("\n"));
   $("#sentiments").toggleClass("d-none", !sentiments.length);
+  $("#similarities").removeClass("d-none");
 }
 
 let chart;
@@ -191,7 +206,7 @@ async function runAnalysis(sentences, callback) {
     spread: 1.0, // default: 1.0
     // other parameters: https://github.com/PAIR-code/umap-js/#parameters
   });
-  const plottableData = umap.fit(sentenceEmbeddingsAsArray);
+  plottableData = umap.fit(sentenceEmbeddingsAsArray);
 
   showStatus("Plotting data...");
   chart = plot(plottableData, sentences, () => {
@@ -205,8 +220,13 @@ async function runAnalysis(sentences, callback) {
     if (callback) callback();
   });
 
-  await processKnn(sentences, plottableData);
+  $("#groups").removeClass("d-none");
 }
+
+$("#processKnn").on("click", async () => {
+  const sentences = getSentencesFromInputs();
+  await processKnn(sentences, plottableData);
+});
 
 function showStatus(message) {
   $("#status").text(message);
@@ -214,6 +234,9 @@ function showStatus(message) {
 }
 
 function plot(coordinatesArray, labels, callback) {
+  classColourIndex = 0;
+  $("#classes").val("");
+
   const data = coordinatesArray.map((x) => {
     return { x: x[0], y: x[1] };
   });
@@ -225,7 +248,7 @@ function plot(coordinatesArray, labels, callback) {
       datasets: [
         {
           data: data,
-          pointBackgroundColor: "black",
+          pointBackgroundColor: "transparent",
           pointRadius: 7,
         },
       ],
@@ -296,6 +319,59 @@ function plot(coordinatesArray, labels, callback) {
           },
         },
       },
+      onClick: (event, elements, chart) => {
+        if (!elements?.[0] || !("index" in elements[0])) return;
+
+        const index = elements[0].index;
+
+        const dataset = chart.data.datasets[0];
+
+        const sentences = getSentencesFromInputs();
+        const existingClasses = $("#classes")
+          .val()
+          .split("\n")
+          .filter((x) => x);
+        const alreadyClickedPoint = existingClasses.includes(sentences[index]);
+
+        let colour = classColourChoices[classColourIndex];
+
+        if (alreadyClickedPoint && classColourIndex > 0) {
+          colour = "transparent";
+        } else if (classColourIndex < classColourChoices.length) {
+          classColourIndex++;
+        } else {
+          colour = randomColour();
+        }
+
+        const notClickedAnythingYet = !Array.isArray(
+          dataset["pointBackgroundColor"]
+        );
+        if (notClickedAnythingYet) {
+          dataset["pointBackgroundColor"] = dataset.data.map((v, i) =>
+            i == index ? colour : "transparent"
+          );
+        } else if (index) {
+          dataset["pointBackgroundColor"][index] = colour;
+        }
+
+        if (alreadyClickedPoint) {
+          const filteredClasses = existingClasses.filter(
+            (s) => s !== sentences[index]
+          );
+          $("#classes").val(filteredClasses.join("\n"));
+          $("#numberOfClasses").val(filteredClasses.length || 1);
+          exampleSentenceIndices = exampleSentenceIndices.filter(
+            (i) => i !== index
+          );
+        } else {
+          existingClasses.push(sentences[index]);
+          $("#classes").val(existingClasses.join("\n"));
+          $("#numberOfClasses").val(existingClasses.length || 1);
+          exampleSentenceIndices.push(index);
+        }
+
+        chart.update();
+      },
     },
   });
 
@@ -312,21 +388,50 @@ function plot(coordinatesArray, labels, callback) {
   return chart;
 }
 
+function randomColour() {
+  const result = [];
+  const allowedCharacters = "0123456789abcdef";
+  const numberOfOptions = allowedCharacters.length;
+  for (let i = 0; i < 6; i++) {
+    result.push(
+      allowedCharacters.charAt(Math.floor(Math.random() * numberOfOptions))
+    );
+  }
+  return "#" + result.join("");
+}
+
 async function processKnn(sentences, plottableData) {
-  $("#similarities textarea").val("");
+  $("#groups").find("#classified").text("");
   knn.clearAllClasses();
   const numberOfClasses = $("#numberOfClasses").val() || 3;
   const kNearestNeighbours = $("#kNearestNeighbours").val() || 1; // Math.floor(Math.sqrt(plottableData.length)) || 1;
-  const usedExamples = Object.create(null);
-  for (let example = 0; example < numberOfClasses; example++) {
-    let randomIndex = Math.floor(Math.random() * plottableData.length);
-    while (randomIndex in usedExamples) {
-      randomIndex = Math.floor(Math.random() * plottableData.length);
+  console.log(
+    exampleSentenceIndices,
+    exampleSentenceIndices.length,
+    numberOfClasses
+  );
+  if (exampleSentenceIndices.length < numberOfClasses) {
+    alert(`It seems you edited the Classes input number instead of clicking on the scatter chart. 
+${numberOfClasses} random comments will be selected as examples from which to create ${numberOfClasses} groups.`);
+    const usedExamples = Object.create(null);
+    for (let example = 0; example < numberOfClasses; example++) {
+      let randomIndex = Math.floor(Math.random() * plottableData.length);
+      while (randomIndex in usedExamples) {
+        randomIndex = Math.floor(Math.random() * plottableData.length);
+      }
+      usedExamples[randomIndex] = true;
+      const x = plottableData[randomIndex][0];
+      const y = plottableData[randomIndex][1];
+      knn.addExample(tf.tensor([x, y]), example);
     }
-    usedExamples[randomIndex] = true;
-    const x = plottableData[randomIndex][0];
-    const y = plottableData[randomIndex][1];
-    knn.addExample(tf.tensor([x, y]), example);
+  } else {
+    // exampleSentenceIndices array
+    for (let example = 0; example < exampleSentenceIndices.length; example++) {
+      const index = exampleSentenceIndices[example];
+      const x = plottableData[index][0];
+      const y = plottableData[index][1];
+      knn.addExample(tf.tensor([x, y]), example);
+    }
   }
   const classified = await Promise.all(
     sentences.map(async (s, i) => {
@@ -352,7 +457,7 @@ async function processKnn(sentences, plottableData) {
     })
     .join("\n");
 
-  $("#similarities textarea").val(val);
+  $("#groups").find("#classified").text(val);
 }
 
 setTimeout(() => {

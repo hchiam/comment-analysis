@@ -54,7 +54,7 @@ I tasted a sour aftertaste. I did not like it.
       </h2>
       <textarea wrap="off" readonly></textarea>
     </div>
-    <div id="similarities" class="progressive-disclosure-container">
+    <div id="similarities" class="d-none progressive-disclosure-container">
       <h2 class="center">
         <span class="d-none progressive-disclosure">Semantic </span
         >Similarities:
@@ -91,6 +91,31 @@ I tasted a sour aftertaste. I did not like it.
           step="0.1"
           placeholder="minimum distance"
         />
+      </div>
+      <button id="start">Start</button>
+      <p id="status">Not started yet...</p>
+      <canvas id="chart" class="in-progress"></canvas>
+      <button id="hide_tooltips" disabled>Hide tooltips</button>
+    </div>
+    <div id="groups" class="d-none progressive-disclosure-container">
+      <h2 class="center">
+        <span class="d-none progressive-disclosure">Classification </span
+        >Groups:
+      </h2>
+      <p>
+        <b><i>Click</i></b> points in the scatter chart above to select them as
+        <b><i>examples</i></b> of <b><i>groups</i></b
+        >. The <b><i>number</i></b> of <b><i>classes</i></b> will be updated to
+        match the number of coloured points.
+      </p>
+      <div class="settings">
+        <label>Groups:</label>
+        <textarea
+          id="classes"
+          wrap="off"
+          readonly
+          placeholder="Click group examples in scatter chart."
+        ></textarea>
         <label
           >K Neighbours (<a
             href="https://github.com/tensorflow/tfjs-models/blob/master/knn-classifier/README.md"
@@ -122,13 +147,11 @@ I tasted a sour aftertaste. I did not like it.
           placeholder="number of classes"
         />
       </div>
-      <button id="start">Start</button>
-      <p id="status">Not started yet...</p>
-      <canvas id="chart" class="in-progress"></canvas>
-      <button id="hide_tooltips" disabled>Hide tooltips</button>
-      <p>Currently: randomly assigns example classes to points.</p>
-      <p>TODO: let user click on examples and THEN run KNN.</p>
-      <textarea wrap="off" readonly></textarea>
+      <div class="center">
+        <button id="processKnn">Run KNN</button>
+      </div>
+      <h3 class="center">Grouped comments:</h3>
+      <pre id="classified" wrap="off" readonly></pre>
     </div>
   </body>
 </html>

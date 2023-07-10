@@ -11,18 +11,26 @@ body {
   align-items: center;
   padding: 1rem 1rem 2rem;
   margin: 0;
-  border-bottom: 2rem solid black;
+  border-bottom: 2rem solid green;
   height: auto;
 }
 
 #inputs,
-#sentiments textarea,
-#similarities textarea {
+textarea,
+pre {
   width: max(50vw, min(90vw, 500px));
   padding: 1rem;
-  margin: 1rem;
+  margin: auto;
   border-radius: 0.25rem;
   border: solid;
+}
+textarea:read-only,
+pre:read-only {
+  background: #eee;
+}
+textarea:not(:read-only):focus,
+textarea:not(:read-only):hover {
+  background: #d3f3fd;
 }
 
 #similarities {
@@ -30,19 +38,29 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  .settings {
-    display: grid;
-    grid-template-columns: auto auto;
-    justify-items: end;
-    gap: 1rem;
-    margin-block-end: 1rem;
-    input {
-      width: 100%;
-    }
+}
+
+.settings {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-items: end;
+  gap: 1rem;
+  margin-block-end: 1rem;
+  input {
+    width: 100%;
   }
 }
 
-#start {
+.settings,
+#typo_fix_suggestions {
+  padding: 1rem;
+  border: 1px solid black;
+  border-radius: 0.25rem;
+}
+
+#start,
+#hide_tooltips,
+#processKnn {
   padding: 1rem;
 }
 
@@ -84,6 +102,11 @@ body {
   }
 }
 
+#classes {
+  max-width: 40ch;
+  padding-top: 0;
+}
+
 .progressive-disclosure {
   color: gray;
 }
@@ -93,7 +116,7 @@ body {
 }
 
 .d-none {
-  display: none;
+  display: none !important;
 }
 
 .red {
