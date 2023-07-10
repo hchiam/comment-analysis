@@ -155,7 +155,7 @@ function showSentiments() {
         labelSymbol = "❌";
         label = "negative";
       }
-      return `${labelSymbol} likely ${label}: ${score} : "${s.sentence}"`;
+      return `${labelSymbol} maybe ${label}: ${score} : "${s.sentence}"`;
     });
   $("#sentiments").find("textarea").val(sentiments.join("\n"));
   $("#sentiments").toggleClass("d-none", !sentiments.length);
