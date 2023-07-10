@@ -51,6 +51,13 @@ textarea:not(:read-only):hover {
   }
 }
 
+.settings,
+#typo_fix_suggestions {
+  padding: 1rem;
+  border: 1px solid black;
+  border-radius: 0.25rem;
+}
+
 #start,
 #hide_tooltips,
 #processKnn {
