@@ -27,6 +27,8 @@ let dic;
 let spell;
 loadDictionary();
 
+let plottableData;
+
 let classColourIndex = 0;
 const classColourChoices = [
   "brown",
@@ -40,8 +42,6 @@ const classColourChoices = [
   "white",
 ];
 const knn = knnClassifier.create();
-
-showSentiments();
 
 async function loadDictionary() {
   aff = await fetch("./index.aff").then((response) => {
@@ -157,6 +157,7 @@ function showSentiments() {
     });
   $("#sentiments").find("textarea").val(sentiments.join("\n"));
   $("#sentiments").toggleClass("d-none", !sentiments.length);
+  $("#similarities").removeClass("d-none");
 }
 
 let chart;
@@ -203,7 +204,7 @@ async function runAnalysis(sentences, callback) {
     spread: 1.0, // default: 1.0
     // other parameters: https://github.com/PAIR-code/umap-js/#parameters
   });
-  const plottableData = umap.fit(sentenceEmbeddingsAsArray);
+  plottableData = umap.fit(sentenceEmbeddingsAsArray);
 
   showStatus("Plotting data...");
   chart = plot(plottableData, sentences, () => {
@@ -217,8 +218,13 @@ async function runAnalysis(sentences, callback) {
     if (callback) callback();
   });
 
-  await processKnn(sentences, plottableData);
+  $("#groups").removeClass("d-none");
 }
+
+$("#processKnn").on("click", async () => {
+  const sentences = getSentencesFromInputs();
+  await processKnn(sentences, plottableData);
+});
 
 function showStatus(message) {
   $("#status").text(message);
@@ -360,7 +366,7 @@ function randomColour() {
 }
 
 async function processKnn(sentences, plottableData) {
-  $("#groups").find("textarea").val("");
+  $("#groups").find("#classified").text("");
   knn.clearAllClasses();
   const numberOfClasses = $("#numberOfClasses").val() || 3;
   const kNearestNeighbours = $("#kNearestNeighbours").val() || 1; // Math.floor(Math.sqrt(plottableData.length)) || 1;
@@ -399,7 +405,7 @@ async function processKnn(sentences, plottableData) {
     })
     .join("\n");
 
-  $("#groups").find("textarea").val(val);
+  $("#groups").find("#classified").text(val);
 }
 
 setTimeout(() => {

@@ -54,7 +54,7 @@ I tasted a sour aftertaste. I did not like it.
       </h2>
       <textarea wrap="off" readonly></textarea>
     </div>
-    <div id="similarities" class="progressive-disclosure-container">
+    <div id="similarities" class="d-none progressive-disclosure-container">
       <h2 class="center">
         <span class="d-none progressive-disclosure">Semantic </span
         >Similarities:
@@ -97,12 +97,14 @@ I tasted a sour aftertaste. I did not like it.
       <canvas id="chart" class="in-progress"></canvas>
       <button id="hide_tooltips" disabled>Hide tooltips</button>
     </div>
-    <div id="groups" class="progressive-disclosure-container">
+    <div id="groups" class="d-none progressive-disclosure-container">
       <h2 class="center">
         <span class="d-none progressive-disclosure">Classification </span
         >Groups:
       </h2>
       <div class="settings">
+        <label>Groups:</label>
+        <textarea id="classes" wrap="off" readonly></textarea>
         <label
           >K Neighbours (<a
             href="https://github.com/tensorflow/tfjs-models/blob/master/knn-classifier/README.md"
@@ -134,7 +136,11 @@ I tasted a sour aftertaste. I did not like it.
           placeholder="number of classes"
         />
       </div>
-      <textarea wrap="off" readonly></textarea>
+      <div class="center">
+        <button id="processKnn">Run KNN</button>
+      </div>
+      <h3 class="center">Grouped comments:</h3>
+      <pre id="classified" wrap="off" readonly></pre>
     </div>
   </body>
 </html>
