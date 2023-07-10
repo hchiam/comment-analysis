@@ -16,13 +16,19 @@ body {
 }
 
 #inputs,
-#sentiments textarea,
-#similarities textarea {
+textarea {
   width: max(50vw, min(90vw, 500px));
   padding: 1rem;
   margin: 1rem;
   border-radius: 0.25rem;
   border: solid;
+}
+textarea:read-only {
+  background: #eee;
+}
+textarea:not(:read-only):focus,
+textarea:not(:read-only):hover {
+  background: #d3f3fd;
 }
 
 #similarities {
@@ -30,15 +36,16 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  .settings {
-    display: grid;
-    grid-template-columns: auto auto;
-    justify-items: end;
-    gap: 1rem;
-    margin-block-end: 1rem;
-    input {
-      width: 100%;
-    }
+}
+
+.settings {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-items: end;
+  gap: 1rem;
+  margin-block-end: 1rem;
+  input {
+    width: 100%;
   }
 }
 

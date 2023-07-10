@@ -91,6 +91,18 @@ I tasted a sour aftertaste. I did not like it.
           step="0.1"
           placeholder="minimum distance"
         />
+      </div>
+      <button id="start">Start</button>
+      <p id="status">Not started yet...</p>
+      <canvas id="chart" class="in-progress"></canvas>
+      <button id="hide_tooltips" disabled>Hide tooltips</button>
+    </div>
+    <div id="groups" class="progressive-disclosure-container">
+      <h2 class="center">
+        <span class="d-none progressive-disclosure">Classification </span
+        >Groups:
+      </h2>
+      <div class="settings">
         <label
           >K Neighbours (<a
             href="https://github.com/tensorflow/tfjs-models/blob/master/knn-classifier/README.md"
@@ -122,12 +134,6 @@ I tasted a sour aftertaste. I did not like it.
           placeholder="number of classes"
         />
       </div>
-      <button id="start">Start</button>
-      <p id="status">Not started yet...</p>
-      <canvas id="chart" class="in-progress"></canvas>
-      <button id="hide_tooltips" disabled>Hide tooltips</button>
-      <p>Currently: randomly assigns example classes to points.</p>
-      <p>TODO: let user click on examples and THEN run KNN.</p>
       <textarea wrap="off" readonly></textarea>
     </div>
   </body>
