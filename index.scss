@@ -16,7 +16,8 @@ body {
 }
 
 #inputs,
-#sentiments textarea {
+#sentiments textarea,
+#similarities textarea {
   width: max(50vw, min(90vw, 500px));
   padding: 1rem;
   margin: 1rem;
@@ -29,6 +30,16 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  .settings {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-items: end;
+    gap: 1rem;
+    margin-block-end: 1rem;
+    input {
+      width: 100%;
+    }
+  }
 }
 
 #start {

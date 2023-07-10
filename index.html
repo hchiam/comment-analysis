@@ -8,7 +8,12 @@
     <script src="index.ts" type="module"></script>
   </head>
   <body>
-    <h1>Comment Analysis Experiment</h1>
+    <h1>
+      <a href="https://github.com/hchiam/comment-analysis" target="_blank"
+        >Comment Analysis</a
+      >
+      Experiment
+    </h1>
     <textarea id="inputs" wrap="off" placeholder="(comments on separate lines)">
 Try inlcuding comments with typos in teh text.
 Words in teh second comment have teh same typo.
@@ -54,10 +59,76 @@ I tasted a sour aftertaste. I did not like it.
         <span class="d-none progressive-disclosure">Semantic </span
         >Similarities:
       </h2>
+      <div class="settings">
+        <label
+          >N Neighbours (<a
+            href="https://pair-code.github.io/understanding-umap"
+            target="_blank"
+            >UMAP</a
+          >):
+        </label>
+        <input
+          id="nNeighbors"
+          type="number"
+          min="1"
+          value="3"
+          step="1"
+          placeholder="number of neighbours"
+        />
+        <label
+          >Min Dist (<a
+            href="https://pair-code.github.io/understanding-umap"
+            target="_blank"
+            >UMAP</a
+          >):</label
+        >
+        <input
+          id="minDist"
+          type="number"
+          min="0"
+          max="1"
+          value="0.1"
+          step="0.1"
+          placeholder="minimum distance"
+        />
+        <label
+          >K Neighbours (<a
+            href="https://github.com/tensorflow/tfjs-models/blob/master/knn-classifier/README.md"
+            target="_blank"
+            >KNN</a
+          >):
+        </label>
+        <input
+          id="kNearestNeighbours"
+          type="number"
+          min="1"
+          value="1"
+          step="1"
+          placeholder="nearest neighbours (tip: &#8730;n)"
+        />
+        <label
+          >Classes (<a
+            href="https://github.com/tensorflow/tfjs-models/blob/master/knn-classifier/README.md"
+            target="_blank"
+            >KNN</a
+          >):
+        </label>
+        <input
+          id="numberOfClasses"
+          type="number"
+          min="1"
+          value="3"
+          step="1"
+          placeholder="number of classes"
+        />
+      </div>
       <button id="start">Start</button>
       <p id="status">Not started yet...</p>
       <canvas id="chart" class="in-progress"></canvas>
       <button id="hide_tooltips" disabled>Hide tooltips</button>
+      <p>Currently: randomly assigns example classes to points.</p>
+      <p>TODO: let user click on examples and THEN run KNN.</p>
+      <textarea wrap="off" readonly></textarea>
     </div>
   </body>
 </html>

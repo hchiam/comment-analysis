@@ -6,6 +6,7 @@
     "deploy": "surge dist https://comment-analysis.surge.sh; open https://comment-analysis.surge.sh"
   },
   "dependencies": {
+    "@tensorflow-models/knn-classifier": "1.2.4",
     "@tensorflow-models/universal-sentence-encoder": "1.3.3",
     "@tensorflow/tfjs": "4.2.0",
     "chart.js": "4.2.0",
