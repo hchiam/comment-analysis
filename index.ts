@@ -186,7 +186,7 @@ async function runAnalysis(sentences, callback) {
   const umap = new UMAP({
     //nEpochs: 100, // nEpochs is computed automatically by default
     nComponents: dimensions,
-    nNeighbors: numberOfNeighbours, // 3?
+    nNeighbors: numberOfNeighbours,
     minDist: minDist, // default: 0.1
     spread: 1.0, // default: 1.0
     // other parameters: https://github.com/PAIR-code/umap-js/#parameters
