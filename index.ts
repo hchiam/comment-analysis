@@ -2,6 +2,7 @@ const tf = require("@tensorflow/tfjs");
 require("@tensorflow/tfjs");
 const use = require("@tensorflow-models/universal-sentence-encoder");
 import { UMAP } from "umap-js";
+const knnClassifier = require("@tensorflow-models/knn-classifier");
 // import {
 //   SpellCheck as nlpSpellCheck,
 //   NGrams,
@@ -25,6 +26,11 @@ let aff;
 let dic;
 let spell;
 loadDictionary();
+
+const knn = knnClassifier.create();
+
+showSentiments();
+
 async function loadDictionary() {
   aff = await fetch("./index.aff").then((response) => {
     return response.text();
@@ -48,6 +54,10 @@ $("body").on("click", ".replace-typo, .replace-typo-other", function (event) {
   const isOther = button.hasClass("replace-typo-other");
   const word = button.data("word");
   const suggestion = isOther ? button.next("input").val() : button.text();
+  if (!suggestion) {
+    button.next("input").focus();
+    return;
+  }
   const yes = confirm(
     `Do you want to replace *ALL* instances of "${word}" with "${suggestion}"? Otherwise consider manually replacing individual cases.`
   );
@@ -57,6 +67,7 @@ $("body").on("click", ".replace-typo, .replace-typo-other", function (event) {
     checkTypos();
   }
 });
+
 function checkTypos() {
   if (!spell) return;
   const words = Array.from(new Set(getWordsFromInputs()));
@@ -109,10 +120,8 @@ function getWordsFromSentence(sentence) {
   );
 }
 
-showSentiments();
 function showSentiments() {
   const sentences = getSentencesFromInputs();
-  console.log(sentences);
   const sentiments = sentences
     .map((sentence) => {
       const score = analyzer.getSentiment(getWordsFromSentence(sentence));
@@ -143,10 +152,10 @@ let chart;
 $("#start").on("click", () => {
   const sentences = getSentencesFromInputs();
   if (sentences?.length) {
-    $("#start").prop("disabled", true);
+    $("#similarities").find("button, input").prop("disabled", true);
     $(".chartjs-tooltip").remove();
     runAnalysis(sentences, () => {
-      $("#start").prop("disabled", false);
+      $("#similarities").find("button, input").prop("disabled", false);
       $("#start").text("Re-run");
     });
   }
@@ -172,13 +181,13 @@ async function runAnalysis(sentences, callback) {
 
   showStatus("Creating plottable data with UMAP...");
   const dimensions = 2; // 2 = 2D
-  const numberOfNeighbours = 3; // Math.min(15, Math.max(3, Math.ceil(sentenceEmbeddingsAsArray.length / 2)));
-  console.log("numberOfNeighbours", numberOfNeighbours);
+  const numberOfNeighbours = $("#nNeighbors").val() || 3; // Math.min(15, Math.max(3, Math.ceil(sentenceEmbeddingsAsArray.length / 2)));
+  const minDist = $("#minDist").val() || 0.1;
   const umap = new UMAP({
     //nEpochs: 100, // nEpochs is computed automatically by default
     nComponents: dimensions,
     nNeighbors: numberOfNeighbours,
-    minDist: 0.1, // default: 0.1
+    minDist: minDist, // default: 0.1
     spread: 1.0, // default: 1.0
     // other parameters: https://github.com/PAIR-code/umap-js/#parameters
   });
@@ -195,6 +204,8 @@ async function runAnalysis(sentences, callback) {
 
     if (callback) callback();
   });
+
+  await processKnn(sentences, plottableData);
 }
 
 function showStatus(message) {
@@ -206,9 +217,6 @@ function plot(coordinatesArray, labels, callback) {
   const data = coordinatesArray.map((x) => {
     return { x: x[0], y: x[1] };
   });
-
-  console.log("labels", labels);
-  console.log("data", data);
 
   const chart = new Chart("chart", {
     type: "scatter",
@@ -238,7 +246,7 @@ function plot(coordinatesArray, labels, callback) {
           enabled: false,
 
           external: function (context) {
-            const canvasBox = context.chart.canvas.getBoundingClientRect();
+            const canvasBox = $("#chart").position();
             const tooltip = context.tooltip;
             const title = String(tooltip.title);
             const left = String(tooltip.caretX + canvasBox.left) + "px";
@@ -303,3 +311,52 @@ function plot(coordinatesArray, labels, callback) {
 
   return chart;
 }
+
+async function processKnn(sentences, plottableData) {
+  $("#similarities textarea").val("");
+  knn.clearAllClasses();
+  const numberOfClasses = $("#numberOfClasses").val() || 3;
+  const kNearestNeighbours = $("#kNearestNeighbours").val() || 1; // Math.floor(Math.sqrt(plottableData.length)) || 1;
+  const usedExamples = Object.create(null);
+  for (let example = 0; example < numberOfClasses; example++) {
+    let randomIndex = Math.floor(Math.random() * plottableData.length);
+    while (randomIndex in usedExamples) {
+      randomIndex = Math.floor(Math.random() * plottableData.length);
+    }
+    usedExamples[randomIndex] = true;
+    const x = plottableData[randomIndex][0];
+    const y = plottableData[randomIndex][1];
+    knn.addExample(tf.tensor([x, y]), example);
+  }
+  const classified = await Promise.all(
+    sentences.map(async (s, i) => {
+      const x = plottableData[i][0];
+      const y = plottableData[i][1];
+      const result = await knn.predictClass(
+        tf.tensor([x, y]),
+        kNearestNeighbours
+      );
+      // console.log("result", result.classIndex);
+      return { sentence: s, class: result.classIndex };
+    })
+  );
+
+  classified.sort((a, b) => a.class - b.class);
+
+  let previousClass = 0;
+  const val = classified
+    .map((s) => {
+      const newLine = s.class !== previousClass ? "\n" : "";
+      previousClass = s.class;
+      return `${newLine}${s.class + 1} ${s.sentence}`;
+    })
+    .join("\n");
+
+  $("#similarities textarea").val(val);
+}
+
+setTimeout(() => {
+  $(".progressive-disclosure-container").one("mousemove", function () {
+    $(this).find(".progressive-disclosure").removeClass("d-none");
+  });
+}, 2000);

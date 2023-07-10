@@ -10,6 +10,8 @@ Local demo: `yarn dev` (if you run into `Error: Expected content key ### to exis
 
 [USE (Universal Sentence Encoder)](https://github.com/tensorflow/tfjs-models/blob/master/universal-sentence-encoder/README.md)
 
+[KNN](https://github.com/tensorflow/tfjs-models/blob/master/knn-classifier/README.md)
+
 [umap-js](https://github.com/PAIR-code/umap-js#umap-js) ([UMAP vs t-SNE vs SNE](https://towardsdatascience.com/visualizing-your-embeddings-4c79332581a9))
 
 [nlp.js](https://github.com/axa-group/nlp.js) (note: `SpellCheck` currently seems incompatible with one of [parcel](https://github.com/hchiam/learning-parcel#learning-parceljs)'s transformers)
@@ -35,3 +37,7 @@ Local demo: `yarn dev` (if you run into `Error: Expected content key ### to exis
 
 - https://github.com/axa-group/nlp.js/blob/master/docs/v3/sentiment-analysis.md
 - https://naturalnode.github.io/natural/sentiment_analysis.html
+
+## knn under chart
+
+- KNN for automatic grouping, maybe with tweakable k input box: https://github.com/tensorflow/tfjs-models/blob/master/knn-classifier/README.md
