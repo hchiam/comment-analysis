@@ -411,7 +411,7 @@ async function processKnn(sentences, plottableData) {
     numberOfClasses
   );
   if (exampleSentenceIndices.length < numberOfClasses) {
-    alert(`It seems you edited the Classes input number instead of clicking on the scatter chart. 
+    alert(`It seems you're using the Classes input number instead of clicking on the scatter chart. 
 ${numberOfClasses} random comments will be selected as examples from which to create ${numberOfClasses} groups.`);
     const usedExamples = Object.create(null);
     for (let example = 0; example < numberOfClasses; example++) {
