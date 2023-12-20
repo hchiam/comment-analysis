@@ -1,14 +1,18 @@
 # comment analysis experiment
 
+Enter comments -> Fix typos -> Get sentiments, semantic similarity graph, and comment groups/classes.
+
 Live demo: https://comment-analysis.surge.sh (`yarn deploy` after running `yarn dev`)
 
 Local demo: `yarn dev` (if you run into `Error: Expected content key ### to exist`, try running `rm -rf .parcel-cache` first)
+
+## references and things this projects builds on
 
 [learning-tfjs-umap](https://github.com/hchiam/learning-tfjs-umap)
 
 [tfjs](https://github.com/tensorflow/tfjs)
 
-[USE (Universal Sentence Encoder)](https://github.com/tensorflow/tfjs-models/blob/master/universal-sentence-encoder/README.md)
+[USE (Universal Sentence Encoder)](https://github.com/tensorflow/tfjs-models/blob/master/universal-sentence-encoder/README.md) (see my [text-similarity-test](https://github.com/hchiam/text-similarity-test))
 
 [KNN](https://github.com/tensorflow/tfjs-models/blob/master/knn-classifier/README.md)
 
@@ -25,6 +29,8 @@ Local demo: `yarn dev` (if you run into `Error: Expected content key ### to exis
 [jQuery](https://github.com/hchiam/learning-jquery#learning-jquery)
 
 [chart.js](https://github.com/chartjs/Chart.js)
+
+(otherwise just look at [package.json](https://github.com/hchiam/comment-analysis/blob/main/package.json))
 
 ## typo fix suggestions under input box to fix input box
 
